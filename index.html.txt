@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日贺卡</title>
+    <style>
+        body {
+            background: linear-gradient(45deg, #ff3366, #ff6b6b, #ff8e8e);
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 生日文字特效 */
+        .birthday-text {
+            position: relative;
+            z-index: 2;
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 5em;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255,215,0,0.8);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* 气球动画 */
+        .balloon {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            border-radius: 50%;
+            animation: balloon-float 8s linear infinite;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+        }
+
+        @keyframes balloon-float {
+            0% { 
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0.5;
+            }
+        }
+
+        /* 闪烁彩灯 */
+        .light {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: twinkle 1.5s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* 音乐播放器样式 */
+        #musicPlayer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 10px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px gold;
+        }
+    </style>
+</head>
+<body>
+    <!-- 生日文字 -->
+    <h1 class="birthday-text">🎉 生日快乐！ 🎂</h1>
+
+    <!-- 自动生成的装饰元素 -->
+    <div class="decorations"></div>
+
+    <!-- 音乐播放器 -->
+    <div id="musicPlayer">
+        <audio id="bgMusic" loop>
+            <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-30.mp3" type="audio/mpeg">
+            您的浏览器不支持音频播放
+        </audio>
+        <button onclick="toggleMusic()">🎵 播放音乐</button>
+    </div>
+
+    <script>
+        // 自动生成装饰元素
+        function createDecorations() {
+            const container = document.querySelector('.decorations');
+            
+            // 生成气球
+            for(let i=0; i<15; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.left = Math.random() * 100 + 'vw';
+                balloon.style.animationDelay = Math.random() * 5 + 's';
+                balloon.style.background = `hsl(${Math.random()*360}, 70%, 60%)`;
+                container.appendChild(balloon);
+            }
+
+            // 生成闪烁彩灯
+            for(let i=0; i<50; i++) {
+                const light = document.createElement('div');
+                light.className = 'light';
+                light.style.left = Math.random() * 100 + 'vw';
+                light.style.top = Math.random() * 100 + 'vh';
+                light.style.background = `hsl(${Math.random()*360}, 100%, 50%)`;
+                light.style.animationDuration = Math.random() * 1 + 0.5 + 's';
+                container.appendChild(light);
+            }
+        }
+
+        // 音乐控制
+        const audio = document.getElementById('bgMusic');
+        function toggleMusic() {
+            if(audio.paused) {
+                audio.play();
+                document.querySelector('#musicPlayer button').textContent = '⏸ 暂停音乐';
+            } else {
+                audio.pause();
+                document.querySelector('#musicPlayer button').textContent = '🎵 播放音乐';
+            }
+        }
+
+        // 点击页面添加特效
+        document.addEventListener('click', (e) => {
+            // 添加爱心特效
+            const heart = document.createElement('div');
+            heart.style.position = 'absolute';
+            heart.style.left = e.clientX + 'px';
+            heart.style.top = e.clientY + 'px';
+            heart.innerHTML = '❤️';
+            heart.style.animation = 'heart-float 2s forwards';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 2000);
+        });
+
+        // 初始化
+        window.onload = () => {
+            createDecorations();
+            // 自动播放音乐（需要用户交互后生效）
+            document.body.addEventListener('click', () => {
+                audio.play().catch(() => {});
+                document.querySelector('#musicPlayer button').textContent = '⏸ 暂停音乐';
+            }, { once: true });
+        }
+    </script>
+</body>
+</html>
